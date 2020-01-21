@@ -8,5 +8,5 @@ This bot will be used to aid in setting up events for members in different timez
 * create and edit saved timezone codes
 
 ## Useful Links
-* (Discord Bot Permission Calculator)[https://discordapi.com/permissions.html#8]
-* (Discord.JS Documentation)[https://discordjs-fork.readthedocs.io/en/latest/docs_user.html]
+* [Discord Bot Permission Calculator](https://discordapi.com/permissions.html#8)
+* [Discord.JS Documentation](https://discordjs-fork.readthedocs.io/en/latest/docs_user.html)
