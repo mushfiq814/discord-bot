@@ -1,24 +1,66 @@
 
+// filesystem
+const fs = require('fs');
+// discord js
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-const {prefix, token, localStorage} = require('./config.json');
-const fs = require('fs');
+// env vars
+const { prefix, token, localStorage } = require('./config.json');
+// moment for date-time
+const moment = require('moment-timezone');
 
 // login
 bot.login(token);
 console.log("Ze bot is alive...");
 
+// command list
+const commands = [
+  {
+    'name': 'hi',
+    'desc': 'say hello',
+  },
+  {
+    'name': 'time',
+    'desc': 'get the current time',
+  },
+  {
+    'name': 'getLink',
+    'desc': 'retrieve a stored bookmark',
+  },
+  {
+    'name': 'addLink',
+    'desc': 'add a new URL to bookmark',
+  },
+  {
+    'name': 'addEvent',
+    'desc': 'add new event list',
+  },
+  {
+    'name': 'tz',
+    'desc': 'get provided time in different stored timezones. Support for adding new timezones coming soon!',
+  },
+]
+
 // message handling
 bot.on('message', (msg) => {
   if (msg.content.startsWith(`${prefix}hi`)) msg.channel.send(`Hi ${msg.author.tag}`);
+  if (msg.content.startsWith(`${prefix}help`)) showHelp(msg);
   if (msg.content.startsWith(`${prefix}time`)) msg.channel.send(`the current time is ${new Date()}`);
   if (msg.content.startsWith(`${prefix}getLink`)) getLink(msg);
   if (msg.content.startsWith(`${prefix}addLink`)) addLink(msg);
   if (msg.content.startsWith(`${prefix}addEvent`)) addEvent(msg);
+  if (msg.content.startsWith(`${prefix}tz`)) showTimeZones(msg);
 });
 
-let addEvent = (msg) => {
-  let titleStartIndex = (prefix + 'addEvent ').length;
+// commands
+const showHelp = (msg) => {
+  let res = `These are the following commands I can respond to. Just type one of these in and watch me roll!\n`;
+  commands.forEach(cmd => res += `**!${cmd.name}**: ${cmd.desc}\n`);
+  msg.channel.send(res);
+}
+
+const addEvent = (msg) => {
+  const titleStartIndex = (prefix + 'addEvent ').length;
   let title = msg.content.substring(titleStartIndex);
 
   let toWrite = {
@@ -34,10 +76,8 @@ let addEvent = (msg) => {
   msg.channel.send(`New Event "${title}" created`);
 }
 
-let addLink = (msg) => {
-  console.log("Add link started");
-
-  let linkStartIndex = (prefix + 'addLink ').length;
+const addLink = (msg) => {
+  const linkStartIndex = (prefix + 'addLink ').length;
   let link = msg.content.substring(linkStartIndex);
 
   let arr = link.split(" ",);
@@ -46,7 +86,6 @@ let addLink = (msg) => {
   linkName = linkName.join(" ");
   linkAddr = linkAddr.join();
 
-  
   let toWrite = {
     "name": linkName,
     "url": linkAddr
@@ -61,10 +100,8 @@ let addLink = (msg) => {
   msg.channel.send(`Saved: ${linkName} with url ${linkAddr}`);
 }
 
-let getLink = (msg) => {
-  console.log("Read link started");
-
-  let linkStartIndex = (prefix + 'getLink ').length;
+const getLink = (msg) => {
+  const linkStartIndex = (prefix + 'getLink ').length;
   let link = msg.content.substring(linkStartIndex);
 
   let data = fs.readFileSync(localStorage);
@@ -73,4 +110,28 @@ let getLink = (msg) => {
 
   if (linkAddr.length > 0) msg.channel.send(`You requested link for ${link}. I found this: ${linkAddr[0].url}`);
   else msg.channel.send(`No links exist for ${link}`);
+}
+
+const showTimeZones = (msg) => {
+  const dateStartIndex = (prefix + 'tz ').length;
+  let dateStr = msg.content.substring(dateStartIndex);
+
+  let res = `Requested dates for ${dateStr} EDT\n`;
+  try {
+    let date = (new Date(dateStr)).toISOString();
+    let savedTimeZones = [
+      'America/New_York',
+      'America/Los_Angeles',
+      'Asia/Dhaka',
+      'Australia/Melbourne',
+      'Europe/Berlin',
+    ]
+    res += '```';
+    savedTimeZones.forEach(zone => res += `${zone.padEnd(25, ' ')}${moment(date).tz(zone).format('LLL')}\n`)
+    res += '```';
+  } catch(e) {
+    res = 'Please enter date time in M/D/YYYY H:mm ampm format';
+  }
+
+  msg.channel.send(res);
 }
