@@ -54,7 +54,8 @@ bot.on('message', (msg) => {
 
 // commands
 const showHelp = (msg) => {
-  let res = `These are the following commands I can respond to. Just type one of these in and watch me roll!\n`;
+  let res = `Hi! I am Mushfiq's test bot. Check out my code on github: https://github.com/mushfiq814/discord-bot\n`;
+  res += `These are the following commands I can respond to. Just type one of these in and watch me roll!\n\n`;
   commands.forEach(cmd => res += `**!${cmd.name}**: ${cmd.desc}\n`);
   msg.channel.send(res);
 }
