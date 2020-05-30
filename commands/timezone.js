@@ -4,9 +4,10 @@ const showTimeZones = (msg, prefix) => {
   const dateStartIndex = (prefix + 'tz ').length;
   let dateStr = msg.content.substring(dateStartIndex);
 
+  let date = new Date().toISOString();
   let res = `Requested dates for ${dateStr} EDT\n`;
   try {
-    let date = (new Date(dateStr)).toISOString();
+    if (dateStr != 'now') date = (new Date(dateStr)).toISOString();
     let savedTimeZones = [
       'America/New_York',
       'America/Los_Angeles',
