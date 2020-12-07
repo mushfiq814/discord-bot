@@ -1,9 +1,12 @@
 const fs = require('fs');
-const { localStorage } = require('../config.json');
+const { localStorage } = require('../config/config.json');
 
 const addEvent = (msg, prefix) => {
-  const titleStartIndex = (prefix + 'addEvent ').length;
-  let title = msg.content.substring(titleStartIndex);
+  const msgStartIndex = (prefix + 'addEvent ').length;
+  const event = msg.content.substring(msgStartIndex).split(" ");
+  const title = event[0];
+  event.shift();
+  const start = event.join(" ");
 
   let toWrite = {
     "title": title

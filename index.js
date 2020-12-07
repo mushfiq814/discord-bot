@@ -2,7 +2,7 @@
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 // env vars
-const { prefix, token } = require('./config.json');
+const { prefix, token } = require('./config/config.json');
 // commands
 const tz = require('./commands/timezone');
 const lk = require('./commands/link');

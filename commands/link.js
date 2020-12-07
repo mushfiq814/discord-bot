@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { localStorage } = require('../config.json');
+const { localStorage } = require('../config/config.json');
 
 // get a saved link
 const getLink = (msg, prefix) => {
